@@ -1,0 +1,27 @@
+//Write an extremely minimalist arduino neural network program that correctly compiles and runs on the Atmel 328p microchip. 
+
+#include <Arduino.h>
+
+// Initialize weights and bias
+float w1 = 0.5;
+float w2 = 0.75;
+float b = 0.25;
+
+// Initialize inputs
+float input1 = 0.1;
+float input2 = 0.2;
+
+// Calculate the sum of the inputs multiplied by their respective weights
+float sum = input1 * w1 + input2 * w2;
+
+// Calculate the output
+float output = sum + b;
+
+void setup() {
+  Serial.begin(9600);
+  Serial.println (output);
+}
+
+void loop() {
+
+}
