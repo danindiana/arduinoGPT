@@ -1,0 +1,38 @@
+//Write an extremely minimalist arduino neural network program that correctly compiles and runs on the Atmel 328p microchip. 
+//Randomize the weights and generate output of the network for the serial monitor as a series of alphanumeric characters. 
+
+#include <Arduino.h>
+
+#define NN_INPUTS 2
+#define NN_OUTPUTS 1
+#define NN_HIDDEN_LAYERS 1
+#define NN_NEURONS_PER_LAYER 1
+
+float weights[NN_INPUTS + NN_NEURONS_PER_LAYER][NN_OUTPUTS] = {
+  {random(10)},
+  {random(10)},
+  {random(10)}};
+
+float input[NN_INPUTS] = {0, 0};
+float output[NN_OUTPUTS] = {0};
+
+void setup() {
+  randomSeed(analogRead(0));
+  Serial.begin(9600);
+  Serial.println("Neural Network Started");
+}
+
+void loop() {
+  for (uint8_t i=0; i<NN_INPUTS; i++) {
+    input[i] = random(10);
+  }
+  
+  for (uint8_t j=0; j<NN_OUTPUTS; j++) {
+    output[j] = 0;
+    for (uint8_t k=0; k<NN_INPUTS+NN_NEURONS_PER_LAYER; k++) {
+      output[j] += input[k]*weights[k][j];
+    }
+  }
+  Serial.println(char(output[0] & 0xFF));
+  delay(1000);
+}
