@@ -1,0 +1,15 @@
+//Write an extremely minimalist arduino program that correctly compiles and runs on the Atmel 328p microchip. 
+//Use the arduino's watchdog timer's natural jitter to produce a reliable stream of true random numbers. Output the stream via the serial monitor. 
+
+#include <Arduino.h>
+#include <WatchDog.h> 
+
+void setup(){
+  Serial.begin(9600); 
+  Watchdog.enable(1); // Set the watchdog timer to 1 ms
+}
+
+void loop(){
+  int jitter = Watchdog.rand(1,0); 
+  Serial.println(jitter); // Output jitter value to serial monitor
+}
