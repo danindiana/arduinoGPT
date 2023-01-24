@@ -1,0 +1,52 @@
+//Write a small arduino neural network program which runs on the Atmel 328p microchip. 
+
+#include <Arduino.h>
+
+// Define the number of neurons in each layer
+#define input_neurons 2
+#define hidden_neurons 3
+#define output_neurons 1
+
+// Declare weights array
+float weights[input_neurons][hidden_neurons];
+
+// Define input and output layers
+float inputLayer[input_neurons];
+float hiddenLayer[hidden_neurons];
+float outputLayer[output_neurons];
+
+void setup() {
+  // Initialize weights of the network
+  for (int i=0; i<input_neurons; i++){
+    for (int j=0; j<hidden_neurons; j++){
+      weights[i][j] = random(-1.0, 1.0);
+    }
+  }
+  Serial.begin(9600);
+}
+
+void loop() {
+  // Read input from serial
+  Serial.readBytes(inputLayer, input_neurons);
+
+  // Calculate the output of the hidden layer
+  for (int i=0; i<hidden_neurons; i++){
+    hiddenLayer[i] = 0;
+    for (int j=0; j<input_neurons; j++){
+      hiddenLayer[i] += inputLayer[j] * weights[j][i];
+    }
+  }
+  
+  // Calculate the output of the output layer
+  for (int i=0; i<output_neurons; i++){
+    outputLayer[i] = 0;
+    for (int j=0; j<hidden_neurons; j++){
+      outputLayer[i] += hiddenLayer[j] * weights[j][i];
+    }
+  }
+
+  // Send the output to serial
+  Serial.write(outputLayer, output_neurons);
+  
+  delay(100);
+}
