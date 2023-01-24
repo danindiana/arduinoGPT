@@ -1,0 +1,62 @@
+//Write a small arduino neural network program which runs on the Atmel 328p microchip. 
+
+#include <Arduino.h>
+#include <istream.h>
+#include <ostream.h>
+
+#define NUM_INPUTS 2
+#define NUM_HIDDEN_LAYERS 3
+#define NUM_OUTPUTS 2
+
+//This is the activation function used to calculate the output of each node in the neural network. 
+float activationFunction(float x){
+    return 1.0/(1.0 + exp(-x));
+}
+
+//The weights of the neural network are stored in this array. 
+float weights[NUM_INPUTS][NUM_HIDDEN_LAYERS][NUM_OUTPUTS];
+
+//The inputs to the neural network are stored in this array. 
+float inputs[NUM_INPUTS];
+
+//The outputs of the neural network are stored in this array. 
+float outputs[NUM_OUTPUTS];
+
+//This is the main function which sets up the neural network and runs the calculations. 
+void setup(){
+    //Initialize the weights of the neural network. 
+    for (int i = 0; i < NUM_INPUTS; i++){
+        for (int j = 0; j < NUM_HIDDEN_LAYERS; j++){
+            for (int k = 0; k < NUM_OUTPUTS; k++){
+                weights[i][j][k] = random(-1.0, 1.0);
+            }
+        }
+    }
+    
+    //Read in the input values from the user. 
+    for (int i = 0; i < NUM_INPUTS; i++){
+        cout << "Please enter input value " << i << ": ";
+        cin >> inputs[i];
+    }
+    
+    //Run the neural network calculations. 
+    for (int i = 0; i < NUM_HIDDEN_LAYERS; i++){
+        for (int j = 0; j < NUM_OUTPUTS; j++){
+            float sum = 0.0;
+            for (int k = 0; k < NUM_INPUTS; k++){
+                sum += inputs[k] * weights[k][i][j];
+            }
+            outputs[j] = activationFunction(sum);
+        }
+    }
+    
+    //Print the output values. 
+    cout << "The output values are: " << endl;
+    for (int i = 0; i < NUM_OUTPUTS; i++){
+        cout << outputs[i] << endl;
+    }
+}
+
+void loop(){
+    //This is an empty loop since the neural network only needs to run once. 
+}
