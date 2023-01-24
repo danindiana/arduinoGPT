@@ -1,0 +1,44 @@
+//Write a small arduino neural network program which runs on the Atmel 328p microchip. 
+
+#include <Arduino.h>
+#include <stdlib.h>
+
+//Define the number of neurons and connections in the neural network
+#define NUM_NEURONS 3
+#define NUM_CONNECTIONS 4
+
+//Define the weights of the connections
+float weights[NUM_CONNECTIONS] = {3.5, -2.3, 0.7, 1.2};
+
+//Define the activation function
+float activation(float input) {
+  return 1 / (1 + exp(-input));
+}
+
+//Loop forever
+void setup() {
+  while (true) {
+    //Define the inputs and outputs
+    float inputs[NUM_NEURONS] = {2.3, 3.4, 1.2};
+    float outputs[NUM_NEURONS] = {0.0, 0.0, 0.0};
+  
+    //Calculate the neuron outputs
+    for (int i=0; i<NUM_NEURONS; i++) {
+      float sum = 0.0;
+      for (int j=0; j<NUM_CONNECTIONS; j++) {
+        sum += inputs[j] * weights[j];
+      }
+      outputs[i] = activation(sum);
+    }
+  
+    //Print the outputs
+    for (int i=0; i<NUM_NEURONS; i++) {
+      Serial.print("Neuron ");
+      Serial.print(i);
+      Serial.print(": ");
+      Serial.println(outputs[i]);
+    }
+  }
+}
+
+void loop() {}
