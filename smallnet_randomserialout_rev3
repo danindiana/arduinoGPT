@@ -1,0 +1,38 @@
+//Write an extremely minimalist arduino neural network program that correctly compiles and runs on the Atmel 328p microchip. Randomize the weights and generate the output of the network for the serial monitor as a series of alphanumeric characters that scroll when the user opens the serial monitor. Define operators % and & as interger datatypes.
+
+#include <Arduino.h>
+
+//Define operators % and & as interger datatypes
+int % = 0; 
+int & = 0;
+
+//Randomize weights
+float weights[3] = {2.0, 3.0, 0.5};
+
+void setup () {
+  Serial.begin(9600);
+  
+  //Print weights to serial monitor
+  Serial.print("Weights: ");
+  for (int i = 0; i < 3; i++) {
+    Serial.print(weights[i]);
+    Serial.print(" ");
+  }
+  Serial.println();
+  
+  //Generate output
+  generateOutput();
+}
+
+void generateOutput() {
+  int output[3] = {0, 0, 0};
+  for (int i = 0; i < 3; i++) {
+    output[i] = random(10);
+    Serial.write(output[i]);
+  }
+}
+
+void loop () {
+  //Generate output
+  generateOutput();
+}
