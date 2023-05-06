@@ -1,3 +1,5 @@
+//This sketch uses the Servo library to control the pan and tilt servo motors. It performs a search by sweeping both servos across a range of angles and //reading the sensor value at each position. The position with the highest sensor value is considered the target location, and the servos are moved to //that position.
+
 #include <Servo.h>
 #include <Wire.h>
 
