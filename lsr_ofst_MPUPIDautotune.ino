@@ -97,7 +97,23 @@ void loop() {
 }
 
 void alignWithLaser() {
-  // Implement control logic here to align the canister with the laser
-  
-  // As an example, we adjust the servo positions by a small increment
-  servoXPosition = (
+  // Get the current position of the canister
+  inputX = getCurrentX();
+  inputY = getCurrentY();
+
+  // Set the target position of the canister
+  setpointX = targetX;
+  setpointY = targetY;
+
+  // Compute the PID controller output
+  pidX.Compute();
+  pidY.Compute();
+
+  // Update servo positions based on the PID output
+  servoXPosition = constrain(servoXPosition + outputX, 0, 180);
+  servoYPosition = constrain(servoYPosition + outputY, 0, 180);
+
+  // Write the updated servo positions
+  servoX.write(servoXPosition);
+  servoY.write(servoYPosition);
+}
