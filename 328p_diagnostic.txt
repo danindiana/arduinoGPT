@@ -1,0 +1,15 @@
+Watchdog timer reset? 
+
+When an Arduino Uno resets, it starts its program from the beginning. This can cause several potential problems:
+
+1. **Loss of volatile data**: Any data stored in RAM will be lost. This includes the state of variables, data received from sensors, or data being processed. If the Arduino was in the middle of a complex operation when it reset, that operation would be interrupted and would need to start from scratch.
+
+2. **Hardware disruption**: If the Arduino is controlling hardware (like motors, LEDs, or other devices), a reset can disrupt those devices. For instance, if a motor was supposed to be running continuously, a reset would stop the motor (until the program started it again).
+
+3. **Communication disruption**: If the Arduino is communicating with another device over a protocol like I2C, SPI or Serial, a reset would disrupt the communication. Any data being sent or received would likely be lost, and the devices might need to re-establish communication.
+
+4. **Time Disruption**: If the Arduino is keeping track of elapsed time using the `millis()` or `micros()` functions, a reset will cause these values to start again from zero.
+
+5. **Infinite Reset Loop**: In some cases, especially when dealing with hardware faults or improperly handled errors, the Arduino could end up in a state where it continually resets, known as an infinite reset loop.
+
+So while resets can be a useful tool for recovering from errors, they should be used with caution. It's also important to consider saving critical data in non-volatile memory (like EEPROM) and building in error handling and recovery mechanisms into your program.
