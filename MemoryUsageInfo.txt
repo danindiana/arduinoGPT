@@ -1,0 +1,18 @@
+For Serial.println((int)&_end - (int)&__data_start); the arduino compiler returns error: '_end' was not declared in this scope
+
+The __data_start and _end symbols might not be defined for your specific board or compiler. As an alternative, you could use the __bss_end and __data_start symbols, which should be more commonly defined.
+
+This information would give you the combined size of the .data and .bss sections:
+
+
+extern int __bss_end;
+extern int __data_start;
+
+...
+
+Serial.print(".data + .bss size: ");
+Serial.println((int)&__bss_end - (int)&__data_start);
+
+The .data section contains initialized global and static variables, and the .bss section contains uninitialized global and static variables. The size of these sections can give an indication of how much of your microcontroller's memory is being used for these types of variables.
+
+If these symbols are not defined either, it means that the linker script used by your board doesn't provide them. You will need to look at the documentation for your specific board to see how to get this kind of information. Some boards provide functions or other methods to access memory usage data.
