@@ -1,3 +1,13 @@
+Confirmed working with an Arduino Nano 33 IOT 
+
+Ubuntu Linux running Arduino IDE Version: 2.3.0
+Date: 2024-02-07T13:40:55.118Z
+CLI Version: 0.35.2
+
+Uses: https://www.arduino.cc/reference/en/libraries/arduino_lsm6ds3/
+
+And: https://github.com/sparkfun/SparkFun_ATECCX08a_Arduino_Library
+
 Here's a step-by-step explanation of the program:
 
 **1. Initialization:**
