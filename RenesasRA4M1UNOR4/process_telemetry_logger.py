@@ -3,9 +3,13 @@ import signal
 import logging
 import subprocess
 import threading
+from logging.handlers import RotatingFileHandler, TimedRotatingFileHandler
 
-# Configure logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - PID:%(process)d - Message:%(message)s')
+
+logging.basicConfig(level=logging.INFO, 
+                    format='%(asctime)s - %(levelname)s - PID:%(process)d - Message:%(message)s',
+                    handlers=[RotatingFileHandler('process_monitor.log', maxBytes=1024*1024, backupCount=5), logging.StreamHandler()]
+                   )
 
 def stream_output(process, device_stamp):
     """
