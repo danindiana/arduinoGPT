@@ -1,0 +1,35 @@
+Linux Notes on Arduino Uno USB access
+
+I also get this info from $lsusb -v:
+
+Bus 005 Device 004: ID 2341:0043 Arduino SA Uno R3 (CDC ACM) Couldn't open device, some information will be missing Device Descriptor: bLength 18 bDescriptorType 1 bcdUSB 1.10 bDeviceClass 2 Communications bDeviceSubClass 0 bDeviceProtocol 0 bMaxPacketSize0 8 idVendor 0x2341 Arduino SA idProduct 0x0043 Uno R3 (CDC ACM) bcdDevice 0.01 iManufacturer 1 Arduino (www.arduino.cc) iProduct 2 iSerial 220 55139313535351012250 bNumConfigurations 1 Configuration Descriptor: bLength 9 bDescriptorType 2 wTotalLength 0x003e bNumInterfaces 2 bConfigurationValue 1 iConfiguration 0 bmAttributes 0xc0 Self Powered MaxPower 100mA Interface Descriptor: bLength 9 bDescriptorType 4 bInterfaceNumber 0 bAlternateSetting 0 bNumEndpoints 1 bInterfaceClass 2 Communications bInterfaceSubClass 2 Abstract (modem) bInterfaceProtocol 1 AT-commands (v.25ter) iInterface 0 CDC Header: bcdCDC 10.01 CDC ACM: bmCapabilities 0x06 sends break line coding and serial state CDC Union: bMasterInterface 0 bSlaveInterface 1 Endpoint Descriptor: bLength 7 bDescriptorType 5 bEndpointAddress 0x82 EP 2 IN bmAttributes 3 Transfer Type Interrupt Synch Type None Usage Type Data wMaxPacketSize 0x0008 1x 8 bytes bInterval 255 Interface Descriptor: bLength 9 bDescriptorType 4 bInterfaceNumber 1 bAlternateSetting 0 bNumEndpoints 2 bInterfaceClass 10 CDC Data bInterfaceSubClass 0 bInterfaceProtocol 0 iInterface 0 Endpoint Descriptor: bLength 7 bDescriptorType 5 bEndpointAddress 0x04 EP 4 OUT bmAttributes 2 Transfer Type Bulk Synch Type None Usage Type Data wMaxPacketSize 0x0040 1x 64 bytes bInterval 1 Endpoint Descriptor: bLength 7 bDescriptorType 5 bEndpointAddress 0x83 EP 3 IN bmAttributes 2 Transfer Type Bulk Synch Type None Usage Type Data wMaxPacketSize 0x0040 1x 64 bytes bInterval 1
+
+The output from lsusb -v for your Arduino Uno shows that it is using the CDC ACM (Communications Device Class Abstract Control Model) driver for USB communication. This driver makes the Arduino appear as a virtual COM port on the host machine. The inability to open the device (Couldn't open device, some information will be missing) could be due to insufficient permissions to access the device details, which is common when running lsusb -v without sudo.
+
+From the information provided, here are some steps you can take:
+
+Ensure you have the necessary permissions: If you have not already added your user to the dialout group and logged out and back in (or rebooted), you should do so. This will allow your user to access the serial ports without needing root access.
+
+Verify the Serial Port Name: Arduino Uno often appears as /dev/ttyACM0, /dev/ttyACM1, or similar. Make sure that the name used in the read_from_arduino() function call matches the actual device file name on your system.
+
+Check for ModemManager: If you're using a Linux distribution, the ModemManager service may be trying to control the Arduino as a modem, which can interfere with your access. You can try stopping the service temporarily with:
+
+sudo systemctl stop ModemManager
+Or disable it from starting on boot:
+
+sudo systemctl disable ModemManager
+Use a UDEV Rule: If permission issues persist, you can set up a udev rule to set the correct permissions whenever the Arduino is plugged in:
+
+Create a file named 50-arduino.rules in the /etc/udev/rules.d/ directory with the following content:
+
+SUBSYSTEM=="tty", ATTRS{idVendor}=="2341", ATTRS{idProduct}=="0043", MODE="0666"
+Then reload the udev rules with:
+
+sudo udevadm control --reload
+sudo udevadm trigger
+Try Again with Changed Permissions: Once you have ensured permissions are correct and ModemManager is not interfering, try to read from the Arduino again with the script.
+
+Check Device Status with dmesg: Right after you connect your Arduino, run dmesg | grep tty to see if the kernel is reporting any problems.
+
+If after performing these steps the issue persists, it may be helpful to perform more detailed diagnostics, and potentially look into any custom configurations for the serial communications on your system. If you have any custom settings in your Arduino sketch related to serial communication, those should be considered as well.
+
