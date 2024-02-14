@@ -91,4 +91,228 @@ def read_from_arduino(port, baud_rate):
 # ... (main_menu関数や、スクリプトの実行条件は原文から変更なしで利用可) 
 ```
 
-Let me know if you have any specific requests or preferences for translation of technical terms! 
+
+
+# 必要なモジュールの導入
+import serial
+import time
+import pyudev
+import re
+import serial.tools.list_ports
+import logging
+import sys
+
+# シリアルモジュールパス表示
+print(serial.__file__)
+
+# システムパス表示
+print(sys.path)
+
+# ログ設定
+logger = logging.getLogger(__name__) 
+logger.setLevel(logging.DEBUG) 
+
+# ファイルハンドラ
+file_handler = logging.FileHandler('ログファイル.log') # Naming the log file with kanji
+file_handler.setLevel(logging.DEBUG)
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+file_handler.setFormatter(formatter)
+
+# コンソールハンドラ
+console_handler = logging.StreamHandler()
+console_handler.setLevel(logging.ERROR) 
+console_handler.setFormatter(formatter)
+
+logger.addHandler(file_handler)
+logger.addHandler(console_handler)
+
+# 通信速度リスト 
+COMMON_BAUD_RATES = [300, 1200, 2400, 4800, 9600, 19200, 38400, 57600, 115200]
+
+# ヒューリスティック検査 (Using '検査' for check)
+def heuristic_check(data):
+    印刷可能文字数 = sum(c.isprintable() for c in data) 
+    return 印刷可能文字数 / len(data) > 0.7  
+
+# 通信速度検出
+def detect_baud_rate(port):
+    for baud_rate in COMMON_BAUD_RATES:
+        try:
+            with serial.Serial(port, baud_rate) as ser: 
+                logger.info(f'通信速度 {baud_rate} を試行中') 
+                time.sleep(2)
+                data = ser.read() 
+                if heuristic_check(data):
+                    logger.info(f'一貫性データ受信、速度: {baud_rate}')
+                    return baud_rate
+        except serial.SerialException as e:
+            logger.error(f'例外: {e}')
+    return None  
+
+# Arduinoポート検出
+def find_arduino_serial_ports():
+    arduino_ports = []
+    devices = list(pyudev.Context().list_devices(subsystem='tty')) 
+    for port in devices:
+        if port.get('ID_VENDOR_ID') and port.get('ID_VENDOR_ID') == "Arduino VID": 
+            arduino_ports.append(port['DEVPATH'])  
+    return arduino_ports
+
+# Arduinoデータ読み取り 
+def read_from_arduino(port, baud_rate):
+    ... 
+    # (Similar hybrid refactoring within this  function)
+
+# ... (main_menu, etc. can be similarly adjusted) 
+
+# 必要モジュール導入 
+import serial
+import time
+import pyudev
+import re
+import serial.tools.list_ports
+import logging
+import sys
+
+# シリアル装置経路表示
+print(serial.__file__)
+
+# システム経路表示
+print(sys.path)
+
+# 記録設定
+logger = logging.getLogger(__name__) 
+logger.setLevel(logging.DEBUG) 
+
+# 文書記録器 
+file_handler = logging.FileHandler('記録文書.log') 
+file_handler.setLevel(logging.DEBUG)
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+file_handler.setFormatter(formatter)
+
+# 主画面記録器
+console_handler = logging.StreamHandler()
+console_handler.setLevel(logging.ERROR) 
+console_handler.setFormatter(formatter)
+
+logger.addHandler(file_handler)
+logger.addHandler(console_handler)
+
+# 標準通信速度表 
+COMMON_BAUD_RATES = [300, 1200, 2400, 4800, 9600, 19200, 38400, 57600, 115200]
+
+# 推測検査 
+def heuristic_check(data):
+    印字可能数 = sum(c.isprintable() for c in data)  
+    return 印字可能数 / len(data) > 0.7  
+
+# 通信速度検知
+def detect_baud_rate(port):
+    for baud_rate in COMMON_BAUD_RATES:
+        try:
+            with serial.Serial(port, baud_rate) as ser: 
+                logger.info(f'通信速度 {baud_rate} 試行中') 
+                time.sleep(2)
+                data = ser.read() 
+                if heuristic_check(data):
+                    logger.info(f'首尾一貫データ受信、速度: {baud_rate}')
+                    return baud_rate
+        except serial.SerialException as e:
+            logger.error(f'例外: {e}')
+    return None  
+
+# Arduino装置検知
+def find_arduino_serial_ports():
+    arduino_ports = []
+    devices = list(pyudev.Context().list_devices(subsystem='tty')) 
+    for port in devices:
+        if port.get('ID_VENDOR_ID') and port.get('ID_VENDOR_ID') == "Arduino VID": 
+            arduino_ports.append(port['DEVPATH'])  
+    return arduino_ports
+
+# Arduino情報読取
+def read_from_arduino(port, baud_rate):
+    # ... (同様の手法でリファクタリング) 
+
+# ... (主機能表など、同様の手法で) 
+
+導入 シリアル  # Import the serial library
+印字 シリアル.経路 
+導入 時間
+導入 外部装置 # Hypothetical 'pyudev' equivalent
+導入 正規表現  # Hypothetical regular expression lib
+導入 シリアル.道具  # ...list_ports equivalent
+導入 記録
+導入 システム 
+印字 システム.経路
+
+# 記録設定 
+記録器 = 記録.採取者(__name__) 
+記録器.水準設定(記録.検査) 
+
+# 文書記録器の作成 (検査情報も記録)
+文書器 = 記録.文書記録器('シリアル記録.文書') 
+文書器.水準設定(記録.検査) 
+
+# 主画面記録器 (エラーのみ)
+主画面器 = 記録.主画面記録器()
+主画面器.水準設定(記録.誤差) 
+
+#書式化指定
+様式 = 記録.書式化('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+文書器.設定様式(様式)
+主画面器.設定様式(様式)
+
+#記録器を結合
+記録器.連結(文書器)
+記録器.連結(主画面器)
+
+# ... (定数と heuristic_check 関数は象徴的に仮定)
+
+# 共通通信速度表 
+標準速度 = [300, 1200, 2400, 4800, 9600, 19200, 38400, 57600, 115200]
+
+# 推測検査 (データが印字可能なのかチェック)
+推測検査(情報):
+   印字可能数 = 総計(c < 127 かつ c > 31 条件は c 情報内)
+   返却 印字可能数 > 情報.長さ * 0.7 
+
+# 通信速度自動検知
+検知通信速度(装置名, 待ち時間=2):
+   標準速度の各々:
+      試行:
+         シリアル接続(装置名, 通信速度, 待ち時間=待ち時間) 機器として: 
+            記録器.情報(f"通信速度 {通信速度} を試験中...")
+            時間.待機(2)
+            情報 = 機器.受信(機器.受信待ち or 100) 
+            もし 推測検査(情報):
+               記録器.情報(f"通信速度 {通信速度} で正常情報受信を確認")
+               返却 通信速度 
+      例外 シリアル.例外 場合 e:
+         記録器.誤差(f"通信速度 {通信速度} チェック中の誤差: {e}")
+   返却 無し 
+
+# ... (装置検知関数 - 機械語的な漢字で構造表現?)
+
+# Arduino装置通信読み込み
+Arduino情報読取(装置名, 通信速度):
+   試行:
+      シリアル接続(装置名, 通信速度, 待ち時間=1) 機器として: 
+         記録器.情報(f"{装置名} を開きました、情報読取中... (Ctrl+C で停止)")
+         回覧 開始: 
+            もし 機器.受信可能():
+               行 = 機器.行読み込み().解読('utf-8').削除末尾空白 
+               もし 行:
+                  記録器.検査(f"読取: {行}")  
+   例外 シリアル.例外 場合 e:
+      記録器.誤差(f"{装置名} アクセス中の誤差: {e}") 
+   例外 キーボード.中断:
+      記録器.情報(f"{装置名} の読取を停止。")
+
+# 主機能表 (装置選択)
+主機能表(Arduino装置表):
+   # ... (主機能表の中身も漢字化可能、概念重視で)
+
+# 主処理部分
+もし __name__ == "__main__":
+   # ... (探索、条件など、処理の流れを漢字仮定)
