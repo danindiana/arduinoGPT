@@ -1,0 +1,93 @@
+Import necessary modules:
+    - serial
+    - time
+    - pyudev
+    - re
+    - serial.tools.list_ports
+    - logging
+    - sys
+
+Print the file path of the serial module:
+    - print(serial.__file__)
+
+Print the system path:
+    - print(sys.path)
+
+Configure logging:
+    - Create a logger with the name of the current module
+    - Set the logging level to DEBUG
+    - Create a file handler for the logger
+        - Set the logging level to DEBUG
+        - Create a formatter with the format '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+        - Set the formatter for the file handler
+    - Create a console handler for the logger
+        - Set the logging level to ERROR
+        - Create a formatter with the format '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+        - Set the formatter for the console handler
+    - Add both handlers to the logger
+
+Define COMMON_BAUD_RATES as a list of common baud rates:
+    - [300, 1200, 2400, 4800, 9600, 19200, 38400, 57600, 115200]
+
+Define heuristic_check function:
+    - Count the number of printable ASCII characters in the data
+    - Return True if more than 70% of the characters are printable, False otherwise
+
+Define detect_baud_rate function:
+    - For each baud rate in COMMON_BAUD_RATES:
+        - Try to open a serial connection with the given port and baud rate
+        - Log an info message about trying the baud rate
+        - Wait for 2 seconds to accumulate data
+        - Read data from the serial connection
+        - If the data passes the heuristic check:
+            - Log an info message about the coherent data
+            - Return the baud rate
+        - If a SerialException occurs:
+            - Log an error message about the exception
+    - If no coherent baud rate is found, return None
+
+Define find_arduino_serial_ports function:
+    - Initialize an empty list for Arduino ports
+    - Get a list of all connected USB serial devices
+    - For each port in the list:
+        - If the port's VID (Vendor ID) is not None and matches the VID of Arduino:
+            - Add the port to the Arduino ports list
+    - Return the Arduino ports list
+
+Define read_from_arduino function:
+    - Try to open a serial connection with the given port and baud rate
+    - Log an info message about opening the port
+    - While True:
+        - Read a line from the serial connection
+        - Decode the line from UTF-8 and strip whitespace
+        - If the line is not empty:
+            - Log a debug message about the line
+    - If a SerialException occurs:
+        - Log an error message about the exception
+    - If a KeyboardInterrupt occurs:
+        - Log an info message about stopping reading
+
+Define main_menu function:
+    - Log a debug message about the available Arduino devices
+    - Print a message about the available Arduino devices
+    - For each Arduino port in the list:
+        - Print the index and the port name
+    - Ask the user to select a device to read from
+    - Try to convert the user's input to an integer and subtract 1
+    - If the selected index is out of range:
+        - Raise a ValueError
+    - Detect the baud rate of the selected Arduino port
+    - If a baud rate is detected:
+        - Print a message about the detected baud rate
+        - Read from the Arduino port with the detected baud rate
+    - If no baud rate is detected:
+        - Print a message about failing to detect a coherent baud rate
+    - If a ValueError occurs:
+        - Print a message about invalid input
+
+If the script is run as the main program:
+    - Find the Arduino serial ports
+    - If there are any Arduino ports:
+        - Run the main menu with the Arduino ports
+    - If there are no Arduino ports:
+        - Print a message about no Arduino devices found with a serial port
