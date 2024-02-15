@@ -1,0 +1,21 @@
+Title: Re: https://github.com/jrowberg/i2cdevlib
+Why is it so hard to install? 
+
+arduino, I2CDev, I2C, minima, MPU6050, DMP
+
+Thankful for this: https://www.youtube.com/watch?v=nAQk7Paz_b8
+
+Arduino IDE 1.8.19 Linux 
+
+ OS: Ubuntu 22.04 jammy
+ Kernel: x86_64 Linux 6.5.0-17-generic
+ Uptime: 17h 48m
+ Packages: 3548
+
+BN: Arduino UNO R4 Minima
+VID: 2341
+PID: 0069
+SN: 3710171E59333032399233324B572***
+
+/home/jeb/Arduino/libraries/I2Cdev
+140 directories, 257 files
