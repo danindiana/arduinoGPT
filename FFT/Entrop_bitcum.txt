@@ -102,3 +102,36 @@ This Arduino code aims to:
 * **The provided `FFT` function is a recursive implementation of the Fast Fourier Transform Algorithm.** It breaks the input signal into smaller components and efficiently calculates the frequency representation. (A thorough explanation of the FFT algorithm itself is beyond the scope of this response, but there are excellent resources online if you'd like to dive deeper).
 
 **Let me know if you want a more detailed explanation of any specific section or would like clarification about the FFT algorithm!** 
+
+This Arduino code snippet involves collecting random numbers using entropy, performing a Fast Fourier Transform (FFT) on the collected samples, and then outputting various pieces of data to the Serial Plotter. Here's a breakdown of the variables/values that are output to the Serial Plotter when this code is run:
+
+1. **Random Numbers Collection:**
+   - For each of the `SAMPLES` (38 in total), a random number is generated, mapped to a range between -32768 and 32767, and then printed alongside its sample index. This part outputs lines like `Sample 0: <value>`, `Sample 1: <value>`, etc., to the Serial Monitor, not the Serial Plotter.
+
+2. **Collection Time:**
+   - After collecting all samples, the code calculates and prints the total time taken to collect the random numbers in milliseconds: `"Random Number Collection Time (ms): <time>"`. This value is outputted as a single value and marks the end of the random number collection phase. This information is more of a log and not plotted.
+
+3. **FFT Calculations:**
+   - There's an intended section to output FFT calculation times and results, but it seems there's a slight inconsistency in the provided code snippet. Specifically, the `FFT` function call and the calculation/printing of `fftEndTime` are mentioned, but these parts of the code would typically output FFT-related data. Assuming the intent was to measure and print the time taken for FFT calculations, you'd expect to see `"FFT Calculation Time (ms): <time>"` in the Serial Monitor, not plotted.
+
+4. **FFT Results:**
+   - The output for Serial Plotter primarily includes the original samples and their magnitudes after FFT. However, the loop designed to print each sample's value and the calculated magnitudes directly to the Serial is flawed. The loop `for (int i = 0; i < SAMPLES; ++i)` should not iterate over `SAMPLES` for magnitudes since the magnitude calculations and their printing occur in a separate loop that iterates over `SAMPLES / 6`. 
+   - Only the magnitudes of the FFT results (`sqrt(real[i] * real[i] + imag[i] * imag[i])`) are intended for plotting, printed in a sequence after the collection time. The magnitudes represent the strength of frequencies found in the random number samples after the FFT.
+
+5. **Frequency and Magnitude Information:**
+   - Lastly, for each frequency component (up to `SAMPLES / 6`), if the magnitude's change exceeds the `HYSTERESIS_THRESHOLD`, the code prints the frequency and its magnitude. This part includes printing lines like `"Frequency (Hz): <frequency>, Magnitude: <magnitude>"`, providing a detailed view of significant frequency components. This detailed information is intended for analytical purposes and is not suitable for plotting due to its textual nature.
+
+### Corrections for Serial Plotter Output:
+To output data correctly to the Serial Plotter, ensure only numerical values are printed within the `loop()` function, preferably in a single line per loop iteration. Textual information like "Sample", "Random Number Collection Time", "FFT Calculation Time", or "Frequency (Hz)" should be removed or commented out if the intent is to use the Serial Plotter effectively.
+
+Here's a quick correction for the plotting part:
+```c++
+// Output for Serial Plotter corrected
+for (int i = 0; i < SAMPLES / 6; ++i) { 
+  float magnitude = sqrt(real[i] * real[i] + imag[i] * imag[i]);
+  Serial.print(magnitude);
+  Serial.print(" ");  // Ensure numerical values are separated
+}
+Serial.println();  // End of a single plot line
+```
+This correction focuses on plotting the magnitudes of the FFT results, which are the most relevant for visualizing in the Serial Plotter.
