@@ -1,0 +1,104 @@
+This code is designed to perform Fast Fourier Transform (FFT) on a set of samples collected from an entropy source. The entropy source is assumed to provide random bits, which are then accumulated to form a random number. This random number is then mapped to a 16-bit integer range, which is used as a sample for the FFT.
+
+Here's a detailed explanation of the code:
+
+1. **Includes and Definitions**: The code starts by including necessary libraries and defining constants.
+
+2. **Setup Function**: The `setup()` function initializes the serial communication and the entropy source.
+
+3. **Loop Function**: The `loop()` function is the main part of the code that runs continuously.
+
+   - **Entropy Collection**: The loop starts by collecting entropy bits and accumulating them into a random number. The `while` loop continues until enough bits have been accumulated (`BITS_TO_ACCUMULATE`).
+
+   - **Sample Generation**: Each accumulated random number is then mapped to a 16-bit integer range and stored in the `samples` array.
+
+   - **Delay**: After each sample is generated, there's a delay to maintain the desired sampling frequency.
+
+4. **FFT Calculation**: After all samples are collected, the `FFT()` function is called to perform the FFT on the `samples` array.
+
+5. **Output for Serial Plotter**: The code then outputs the time taken for entropy collection and FFT calculation, as well as the samples and their FFT magnitudes.
+
+6. **Hysteresis Check**: The code checks for hysteresis and prints the frequency and magnitude if the change in magnitude exceeds the hysteresis threshold.
+
+7. **Quiescent Delay**: Finally, there's a delay to maintain a quiescent phase.
+
+8. **FFT Function**: The `FFT()` function is a recursive implementation of the Cooley-Tukey FFT algorithm. It takes an array of samples, and arrays for the real and imaginary parts of the FFT, and the size of the sample array.
+
+   - **Base Case**: If the sample size is 1 or less, the function simply returns the sample as the FFT result.
+
+   - **Recursive Case**: If the sample size is greater than 1, the function splits the samples into even and odd indices, performs FFT on each half, and then combines the results.
+
+9. **FFT Combination**: The FFT results are combined by adding and subtracting the transformed odd samples from the even samples, with the phase factor adjusted for each frequency bin.
+
+10. **End of Loop**: The loop repeats indefinitely, with a delay between each iteration to maintain the quiescent phase.
+
+Please note that the `FFT` function implementation is a placeholder and should be replaced with an actual FFT algorithm implementation. The code also assumes that the `Entropy` library provides an `available()` function to check if entropy data is available and a `random()` function to generate random bits.
+
+Absolutely! Here's a careful step-by-step breakdown of the code, assuming you have included both the `Entropy` library and an `FFT` implementation of your choosing.
+
+**Overall Purpose**
+
+This Arduino code aims to:
+
+1. **Collect True Random Numbers:** Generate true random numbers based on entropy (unpredictability) provided by a watchdog timer or a similar randomness source.
+2. **Perform Spectral Analysis (FFT):** Calculate the frequency components present within the collected random numbers using a Fast Fourier Transform (FFT).
+3. **Detect Dominant Frequencies:** Identify and print out significant frequencies detected in the random data.
+
+**Step-by-Step Explanation**
+
+**Includes:**
+
+* **#include <Entropy.h>:** Includes the `Entropy` library, required for generating true random numbers using the watchdog timer or other hardware randomness sources.
+* **#include <math.h>** Includes the standard math library for functions like `sqrt`, `cos`, `sin`, and constants like `PI`.
+
+**Defines:**
+
+* **SAMPLES:** Determines the number of random samples to collect.
+* **SAMPLING_FREQUENCY:** The rate at which random numbers are collected (in Hertz).
+* **OUT_FREQ:** The maximum frequency that can be analyzed by the FFT.
+* **QUIESCENT_DELAY:**  A delay after each analysis cycle to reduce CPU load.
+* **HYSTERESIS_THRESHOLD:** A threshold to avoid repeated reporting of frequencies that don't change significantly.
+* **BITS_TO_ACCUMULATE:** The number of random bits to gather for each sample, ensuring better randomness quality.
+
+**Setup (`setup()` function):**
+
+1. **Serial.begin(115200):** Initializes serial communication for printing results. 
+2. **Entropy.Initialize();:** Initializes the entropy source.
+
+**Loop (`loop()` function):**
+
+1. **Array Declarations:**  Creates various arrays to hold samples, FFT results, and previous magnitudes for comparison.
+
+2. **Random Number Collection:**
+   * Starts timing the random number generation process.
+   * **Inner Loop:**  Iterates until a  `SAMPLES`-sized dataset is collected:
+     * Gathers random bits until `BITS_TO_ACCUMULATE` is reached.
+     * Maps the resulting raw random value to a signed integer from -32768 to 32767 for analysis.
+     * Prints the sample.
+     * Delays briefly to maintain the `SAMPLING_FREQUENCY`.
+   * Ends timing and prints the elapsed time.
+
+3. **FFT (Fast Fourier Transform):**
+   * Records the start time for FFT calculations.
+   * Calls the `FFT` function (implementation not shown) to perform the Fast Fourier Transform on the `samples` array. This decomposes the signal into its frequency components, stored in `real` and `imag` arrays.
+   * Records the end time and prints the FFT calculation time.
+
+4. **Serial Plotter Output (Commented Out):**
+   * These commented-out lines seem designed to output data in a format potentially suitable for a serial plotter.
+
+5. **Magnitude Calculation:**
+    * Iterates over frequencies and calculates the magnitude of each frequency component from the FFT results (`real` and `imag`).
+
+6. **Frequency Detection with Hysteresis:**
+   * For each frequency component:
+      * Compares the current magnitude with a previously stored magnitude (`previousMagnitude`).
+      * If the difference is above `HYSTERESIS_THRESHOLD`, the frequency is considered significant and is printed along with its magnitude.
+      * Updates the `previousMagnitude` for comparison in the next iteration.
+
+7.  **Quiescent Delay:**   
+    *  `delay(QUIESCENT_DELAY)`: Pauses the program to reduce CPU load.
+
+**FFT Function (Not Fully Shown):**
+* **The provided `FFT` function is a recursive implementation of the Fast Fourier Transform Algorithm.** It breaks the input signal into smaller components and efficiently calculates the frequency representation. (A thorough explanation of the FFT algorithm itself is beyond the scope of this response, but there are excellent resources online if you'd like to dive deeper).
+
+**Let me know if you want a more detailed explanation of any specific section or would like clarification about the FFT algorithm!** 
