@@ -1,0 +1,32 @@
+graph TD
+    A[Signal Acquisition and Preprocessing] -->|Raw Signal| B[FFT Computation]
+    B -->|FFT Result| C[Neural Network Augmentation]
+    C -->|Enhanced FFT| D[Spectrum Sensing]
+    D -->|Idle Channels| E[Decision-Making]
+    E -->|Best Channels| F[Reconfiguration]
+    F -->|Updated Transmission Parameters| G[Transmission]
+    G -->|Transmit Signal| H[Real-time Control]
+    H -->|Monitoring| A
+    subgraph "NXP i.MX 8M Plus"
+        B
+        C
+        E
+        F
+        H
+    end
+    subgraph "External Interfaces"
+        A
+        G
+    end
+    B[FFT Computation] -.->|Uses| B1[Dual Cortex-A53]
+    C[Neural Network Augmentation] -.->|Uses| C1[NPU]
+    H[Real-time Control] -.->|Uses| H1[Cortex-M7]
+    G -->|Wi-Fi/Bluetooth| I[Network Interface]
+    subgraph "Torizon IoT Platform"
+        M[Linux OS]
+        N[Remote Software Updates]
+        O[Device Management]
+    end
+    M -.-> B
+    N -.-> H
+    O -.-> H
