@@ -85,3 +85,4 @@ The comprehensive testing approach helps identify:
 - Allocation boundary conditions
 
 The output provides clear pass/fail indications while maintaining detailed diagnostic information for troubleshooting memory-related issues.
+![Screenshot_2025-05-06_19-14-31](https://github.com/user-attachments/assets/5cabd5be-0634-484c-a244-7d6365bb7cda)
