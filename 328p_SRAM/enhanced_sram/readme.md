@@ -39,3 +39,5 @@ The suite verifies:
 - Memory cell isolation (no coupling between adjacent cells)
 
 ## Sample Output
+
+![image](https://github.com/user-attachments/assets/e39c03a5-2f00-4bf3-84f3-6ea0dd65eecb)
